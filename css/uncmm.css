@@ -1,0 +1,129 @@
+#dropsong{
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	width: 66%;
+	margin: 24px auto;
+	border: 4px dashed #FFF;
+	padding: 32px;
+	text-align: center; 
+	font-size: 1.66em;
+}
+#dropSong small{
+	font-size: 0.5em;
+}
+header{
+	padding: 24px 0;
+}
+header h1{
+	text-align: center;
+	color: #F0F;
+	text-shadow: 0px 1px 0px #888;
+}
+
+footer{
+	text-align: center;
+	margin-top: 32px;
+	padding: 16px 0;
+	border-top: 4px solid #FFF;
+}
+
+#dropSong.hover{
+	border-color:#F0F;
+}
+
+.half{
+	width: 50%;
+	margin:0 auto;
+}
+
+#progressBar{
+	border: 4px solid #FFF;
+	height: 32px;
+	margin: 52px 0;
+}
+.progressBar{
+	height: 24px;
+	background-color: #F0F;
+	color: #FFF;
+}
+
+#trackVisualisation{
+	border: 4px solid #FFF;
+	margin: 24px auto;
+	height: 136px;
+	overflow: hidden;
+	width: 66%;
+	position: relative;
+}
+#trackVisualisation.empty{
+	background: repeating-linear-gradient(
+	  -45deg,
+	  #404,
+	  #404 9px,
+	  #808 10px,
+	  #808 19px
+	);
+}
+
+.trackControls, #selectMode{
+	text-align: center;
+}
+.trackControls button, #selectMode button{
+	margin: 16px;
+}
+
+
+.trackControls input.form-control{
+	width: 96px;
+	color: #888;
+}
+
+.trackControls input[type=range]{
+	width: 160px;
+	display: inline;
+}
+
+#beatInput{
+	height: 0;
+	border: 0;
+}
+
+#accordion{
+	margin: 24px 0;
+}
+
+#accordion h3{
+	cursor: pointer;
+	color: #FFF;
+	font-size: 1.2em;
+	padding-left: 32px;
+	background: #000 url('../img/list_stone.png') left center no-repeat;
+	margin: 12px 0 0 0;
+}
+#accordion h3:hover{
+	color: #808;
+}
+#accordion h3:focus{
+	outline: 0;
+}
+#accordion ul{
+	margin: 4px 0;
+}
+#countdown{
+	position: fixed;
+	width: 50%;
+	height: 50%;
+	left: 25%;
+	top: 25%;
+	text-align: center;
+	font-size: 10em;
+	z-index: 10000;
+	color: #FFF;
+}
+.done{
+	text-decoration: line-through;
+}
+#trackTitle{
+	font-size: 1.3em;
+	text-align:center;
+}
