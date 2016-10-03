@@ -1,129 +1,1 @@
-<html>
-<head>
-	<meta charset="UTF-8">
-	<title>Unofficial Necrodancer Custom Music Maker</title>
-	<link href='http://fonts.googleapis.com/css?family=Press+Start+2P' rel='stylesheet' type='text/css'>
-	<link rel="stylesheet" href="css/bootstrap.css" />
-	<link rel="stylesheet" href="css/bootstrap-theme.css" />
-	<link rel="stylesheet" href="css/uncmm.css" />
-</head>
-<body>
-<div class="container">
-	<header>
-		<table>
-			<tr>
-				<td><img src="img/skull_left.png" /></td>
-				<td><h1>Unofficial Necrodancer Custom Music Maker</h1></td>
-				<td><img src="img/skull_right.png" /></td>
-			</tr>
-		</table>
-	</header>
-	<p class="intro">This is an attempt to make custom songs easier for the great game <a target="_target" href="http://necrodancer.com">Crypt of the Necrodancer</a></p>
-	<div id="dropSong">Drag n' drop your song HERE<br /><br /><small>And nowhere else, OK? I'm watching you.</small></div>
-	<audio id="audioTick" src="sfx/tick.wav"></audio>
-	<audio id="audioCountdown" src="sfx/countdown.wav"></audio>
-	<audio id="audioTrack"></audio>
-	<h2 id="trackTitle"></h2>
-	<div id="trackVisualisation" class="empty" style="display:none;">
-		<div class="half">
-			<div id="progressBar" style="display:none;">
-				<div class="progressBar">Loading...</div>
-			</div>
-		</div>
-	</div>
-	<div id="selectMode" style="display:none;">
-		<h3>Select Mode</h3>
-		<button id="btnMode0" type="button" class="btn btn-lg btn-info"><i class="glyphicon glyphicon-pause"></i> Tap the beat</button>
-		<button id="btnMode1" type="button" class="btn btn-lg btn-info"><i class="glyphicon glyphicon-forward"></i> Tempo-based</button>
-	</div>
-	<div id="trackControlsMode0" class="trackControls" style="display:none;">
-		<form action="export.php" method="post" class="form-inline" id="exportForm0">
-			<button id="btnRecord0" type="button" class="btn btn-success"><i class="glyphicon glyphicon-record"></i> Record</button>
-			<button id="btnStop0" disabled type="button" class="btn btn-warning"><i class="glyphicon glyphicon-stop"></i> Stop</button>
-			<button id="btnExport0" type="submit" disabled class="btn btn-primary"><i class="glyphicon glyphicon-save"></i> Export</button>
-			<input type="hidden" name="beatData" id="beatData0" />
-			<input type="hidden" name="trackName" id="trackName0" />
-		</form>
-	</div>
-	<div id="trackControlsMode1" class="trackControls" style="display:none;">
-		<form action="export1.php" method="post" class="form-inline" id="exportForm1">
-			<label for="tempo">Tempo : </label>
-			<input type="range" name="tempo" id="tempo" min="30" max="200" value="120" step="0.5" />
-			<input type="text" id="tempoNum" class="form-control" />
-			<label for="offset">Offset : </label>
-			<input type="range" name="offset" id="offset" min="0" max="10" value="0" step="0.05" />
-			<input type="text" id="offsetNum" class="form-control" />
-			<br />
-			<button id="btnPlay1" type="button" class="btn btn-success"><i class="glyphicon glyphicon-play"></i> Play</button>
-			<button id="btnStop1" disabled type="button" class="btn btn-warning"><i class="glyphicon glyphicon-stop"></i> Stop</button>
-			<button id="btnExport1" type="submit" class="btn btn-primary"><i class="glyphicon glyphicon-save"></i> Export</button>
-			<input type="hidden" name="beatData" id="beatData1" />
-			<input type="hidden" name="trackName" id="trackName1" />
-			<input type="hidden" name="trackDuration" id="trackDuration1" />
-		</form>
-	</div>
-	<div id="accordion">
-		<h3>How to use it</h3>
-		<div class="well">
-			<ul class="tips">
-				<li>First you drag and drop the song in the box below</li>
-				<li>Once loaded, you pick a mode :</li>
-				<li><strong>"Tap the beat"</strong>
-					<ul>
-						<li>Press "<i class="glyphicon glyphicon-record"></i>Record" and hit any key each time you want to record a beat</li>
-						<li>When you're done, press "<i class="glyphicon glyphicon-stop"></i>Stop"</li>
-						<li>You can also press Enter while recording to stop</li>
-					</ul>
-				</li>
-				<li><strong>"Tempo-based"</strong>
-					<ul>
-						<li>Move the first cursor to change the tempo</li>
-						<li>Move the second cursor to change when the music begins</li>
-						<li>You can also type on the text fields next to the cursors</li>
-						<li>Press "<i class="glyphicon glyphicon-play"></i>Play" to preview</li>
-						<li>WARNING ! Playback seems to be really slow on Firefox, try with Chrome instead</li>
-					</ul>
-				</li>
-				<li>Push the button Export to save the file and copy it along with the mp3 file to your custom_music folder</li>
-				<li>Do NOT run beatdown.exe, it would replace your newly made text file</li>
-			</ul>
-			<p>Quick notes :<p>
-			<ul class="tips">
-				<li>The music files are not sent to the server. Only the beats data does, to validate and generate the text file. I don't record them, 'cause I don't care.</li>
-				<li>The game is pretty forgiving about the rythm, so if you don't tap perfectly while recording, it should still be playable.</li>
-			</ul>
-		</div>
-		<h3>Why the hell did you make this?!</h3>
-		<div class="well">
-			<p class="tips"><em>And why should I care?</em></p>
-			<p class="tips">This is a good question but you should feel ashamed questionning me like that. Who do you think you are? My mom?</p>
-			<p class="tips">I was trying a few video games stuff as custom music but a few songs had their beats messed up : beats only recognised on snare, weird stuff on varying tempo or rythm, etc.</p>
-			<p class="tips">Then I looked at the files generated by beatdown.exe and it was extremely simple to reproduce, as it was only lines with floats representing the time of the beats. One for each.</p>
-			<p class="tips">I started a simple script until I was able to play with one perticular song : "Final Fantasy X - Battle 1". Then I tried to make a nicer version with all the modern interwebs crap.</p>
-			<p class="tips">Happy ?</p>
-		</div>
-		<h3>What's next?</h3>
-		<div class="well">
-			<p class="tips">There are a few things I want to add later:</p>
-			<ul class="tips">
-				<li>Waiting for people to care about this tool</li>
-				<li>Draggable beats along the track</li>
-				<li>Select frame of the track to record</li>
-			</ul>
-		</div>
-		<h3>Changelog</h3>
-		<div class="well">
-			<p class="tips">2014-05-06 : Added tempo-based mode and a countdown on tapping mode</p>
-			<p class="tips">2014-05-04 : Corrected small bug exporting on Firefox</p>
-			<p class="tips">2014-05-03 : First release</p>
-		</div>
-	</div>
-	<footer>©EvilTroopa 2014 - Audio stuff made with <a target="_blank" href="www.wavesurfer.fm">WaveSurfer</a></footer>
-</div>
-<script src="js/jquery.min.js"></script>
-<script src="js/jquery-ui.min.js"></script>
-<script src="js/bootstrap.js"></script>
-<script src="js/wavesurfer.min.js"></script>
-<script src="js/uncmm.js"></script>
-</body>
-</html>
+<html><head>	<meta charset="UTF-8">	<title>Unofficial Necrodancer Custom Music Maker</title>	<link href='http://fonts.googleapis.com/css?family=Press+Start+2P' rel='stylesheet' type='text/css'>	<link rel="stylesheet" href="css/bootstrap.css" />	<link rel="stylesheet" href="css/bootstrap-theme.css" />	<link rel="stylesheet" href="css/uncmm.css" /></head><body><div class="container">	<header>		<table>			<tr>				<td><img src="img/skull_left.png" /></td>				<td><h1>Unofficial Necrodancer Custom Music Maker</h1></td>				<td><img src="img/skull_right.png" /></td>			</tr>		</table>	</header>	<p class="intro">This is an attempt to make custom songs easier for the great game <a target="_target" href="http://necrodancer.com">Crypt of the Necrodancer</a></p>	<div id="dropSong">Drag n' drop your song HERE<br /><br /><small>And nowhere else, OK? I'm watching you.</small></div>	<audio id="audioTick" src="sfx/tick.wav"></audio>	<audio id="audioCountdown" src="sfx/countdown.wav"></audio>	<audio id="audioTrack"></audio>	<h2 id="trackTitle"></h2>	<p>Double click on a beat to delete it. Drag it to be precisely on time ! </p>	<div id="trackVisualisation" class="empty" style="display:none;">		<div class="half">			<div id="progressBar" style="display:none;">				<div class="progressBar">Loading...</div>			</div>		</div>	</div>	<div id="selectMode" style="display:none;">		<h3>Select Mode</h3>		<button id="btnMode0" type="button" class="btn btn-lg btn-info"><i class="glyphicon glyphicon-pause"></i> Tap the beat</button>		<button id="btnMode1" type="button" class="btn btn-lg btn-info"><i class="glyphicon glyphicon-forward"></i> Tempo-based</button>	</div>	<div id="trackControlsMode0" class="trackControls" style="display:none;">			<button id="btnRecord0" type="button" class="btn btn-success"><i class="glyphicon glyphicon-record"></i> Record</button>			<button id="btnStop0" disabled type="button" class="btn btn-warning"><i class="glyphicon glyphicon-stop"></i> Stop</button>			<button id="btnExport0" type="submit" disabled class="btn btn-primary"><i class="glyphicon glyphicon-save"></i> Export</button>			<input type="hidden" name="beatData" id="beatData0" />			<input type="hidden" name="trackName" id="trackName0" />	</div>	<div id="trackControlsMode1" class="trackControls" style="display:none;">			<label for="tempo">Tempo : </label>			<input type="range" name="tempo" id="tempo" min="30" max="200" value="120" step="0.5" />			<input type="text" id="tempoNum" class="form-control" />			<label for="offset">Offset : </label>			<input type="range" name="offset" id="offset" min="0" max="10" value="0" step="0.05" />			<input type="text" id="offsetNum" class="form-control" />			<br />			<button id="btnPlay1" type="button" class="btn btn-success"><i class="glyphicon glyphicon-play"></i> Play</button>			<button id="btnStop1" disabled type="button" class="btn btn-warning"><i class="glyphicon glyphicon-stop"></i> Stop</button>			<button id="btnExport1" type="submit" class="btn btn-primary"><i class="glyphicon glyphicon-save"></i> Export</button>			<input type="hidden" name="beatData" id="beatData1" />			<input type="hidden" name="trackName" id="trackName1" />			<input type="hidden" name="trackDuration" id="trackDuration1" />	</div>	<div id="accordion">		<h3>How to use it</h3>		<div class="well">			<ul class="tips">				<li>First you drag and drop the song in the box below</li>				<li>Once loaded, you pick a mode :</li>				<li><strong>"Tap the beat"</strong>					<ul>						<li>Press "<i class="glyphicon glyphicon-record"></i>Record" and hit any key each time you want to record a beat</li>						<li>When you're done, press "<i class="glyphicon glyphicon-stop"></i>Stop"</li>						<li>You can also press Enter while recording to stop</li>					</ul>				</li>				<li><strong>"Tempo-based"</strong>					<ul>						<li>Move the first cursor to change the tempo</li>						<li>Move the second cursor to change when the music begins</li>						<li>You can also type on the text fields next to the cursors</li>						<li>Press "<i class="glyphicon glyphicon-play"></i>Play" to preview</li>						<li>WARNING ! Playback seems to be really slow on Firefox, try with Chrome instead</li>					</ul>				</li>				<li>Push the button Export to save the file and copy it along with the mp3 file to your custom_music folder</li>				<li>Do NOT run beatdown.exe, it would replace your newly made text file</li>			</ul>			<p>Quick notes :<p>			<ul class="tips">				<li>The music files are not sent to the server. Only the beats data does, to validate and generate the text file. I don't record them, 'cause I don't care.</li>				<li>The game is pretty forgiving about the rythm, so if you don't tap perfectly while recording, it should still be playable.</li>			</ul>		</div>		<h3>Why the hell did you make this?!</h3>		<div class="well">			<p class="tips"><em>And why should I care?</em></p>			<p class="tips">This is a good question but you should feel ashamed questionning me like that. Who do you think you are? My mom?</p>			<p class="tips">I was trying a few video games stuff as custom music but a few songs had their beats messed up : beats only recognised on snare, weird stuff on varying tempo or rythm, etc.</p>			<p class="tips">Then I looked at the files generated by beatdown.exe and it was extremely simple to reproduce, as it was only lines with floats representing the time of the beats. One for each.</p>			<p class="tips">I started a simple script until I was able to play with one perticular song : "Final Fantasy X - Battle 1". Then I tried to make a nicer version with all the modern interwebs crap.</p>			<p class="tips">Happy ?</p>		</div>		<h3>What's next?</h3>		<div class="well">			<p class="tips">There are a few things I want to add later:</p>			<ul class="tips">				<li>Waiting for people to care about this tool</li>				<li>Draggable beats along the track</li>				<li>Select frame of the track to record</li>			</ul>		</div>		<h3>Changelog</h3>		<div class="well">			<p class="tips">2014-05-06 : Added tempo-based mode and a countdown on tapping mode</p>			<p class="tips">2014-05-04 : Corrected small bug exporting on Firefox</p>			<p class="tips">2014-05-03 : First release</p>		</div>	</div>	<footer>©EvilTroopa 2014 - Audio stuff made with <a target="_blank" href="www.wavesurfer.fm">WaveSurfer</a></footer></div><script src="js/jquery.min.js"></script><script src="js/jquery-ui.min.js"></script><script src="js/bootstrap.js"></script><script src="//cdnjs.cloudflare.com/ajax/libs/wavesurfer.js/1.0.52/wavesurfer.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/wavesurfer.js/1.1.2/plugin/wavesurfer.regions.min.js"></script><script src="js/uncmm.js"></script></body></html>
