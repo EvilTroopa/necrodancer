@@ -50,9 +50,7 @@
 
 	<div id="dropSong">Drag n' drop your song HERE<br /><br /><small>And nowhere else, OK? I'm watching you.</small></div>
 
-	<audio id="audioTick" src="sfx/tick.wav"></audio>
-
-	<audio id="audioCountdown" src="sfx/countdown.wav"></audio>
+	<audio id="audioTick" style="display: none"></audio>
 
 	<audio id="audioTrack"></audio>
 
@@ -62,7 +60,7 @@
 
 	<br />
 
-	<label><input type="checkbox" id="enableSoundFx"> Enable sound fx</label>
+	<label><input type="checkbox" id="enableSoundFx"> Enable sound fx (latency may occur)</label>
 
 	<div id="trackVisualisation" class="empty" style="display:none;">
 
@@ -98,6 +96,8 @@
 
 			<button id="btnExport0" type="submit" disabled class="btn btn-primary"><i class="glyphicon glyphicon-save"></i> Export</button>
 
+			<label><input type="checkbox" id="enableCountdown" checked > Enable countdown</label>
+
 			<input type="hidden" name="beatData" id="beatData0" />
 
 			<input type="hidden" name="trackName" id="trackName0" />
@@ -115,7 +115,7 @@
 
 			<label for="offset">Offset : </label>
 
-			<input type="range" name="offset" id="offset" min="0" max="10" value="0" step="0.01" />
+			<input type="range" name="offset" id="offset" min="0" max="20" value="0" step="0.01" />
 
 			<input type="text" id="offsetNum" class="form-control" />
 

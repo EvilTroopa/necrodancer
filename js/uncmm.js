@@ -10,7 +10,15 @@ var trackName = "";
 
 var enableSoundFx = false;
 
-var audioTick = new Audio('sfx/tick.wav');
+var enableCountdown = true;
+
+var audioTick = WaveSurfer.create({
+	container: '#audioTick',
+	waveColor: 'red',
+	progressColor: 'purple'
+});
+audioTick.load('sfx/tick.wav');
+audioTick.setVolume(0.4);
 
 
 /*******UTILS*******/
@@ -52,7 +60,9 @@ function countdown(iCountdown){
 
 	if ($('#countdown')) $('#countdown').remove();
 
-	if (iCountdown > 0){
+	$('#beatInput').focus();
+
+	if (iCountdown > 0 && enableCountdown){
 
 		debugMe(iCountdown+'...');
 
@@ -67,8 +77,6 @@ function countdown(iCountdown){
 
 		$('#countdown').animate({opacity: 0}, 400);
 
-		$('#beatInput').focus();
-
 		setTimeout(function(){ countdown(iCountdown-1) }, 1000);
 
 	} else {
@@ -82,11 +90,12 @@ function countdown(iCountdown){
 	}
 
 }
-
-/******UTILS******/
-
+/********I********/
 
 
+/**
+ * Initialize listeners when appropriate
+ */
 $(document).ready(function(){
 
 	var dropZone = document.getElementById('dropSong');
@@ -121,6 +130,10 @@ $(document).ready(function(){
 			enableSoundFx = $(this).is(':checked');
 	});
 
+	$('#enableCountdown').change(function(){
+		enableCountdown = $(this).is(':checked');
+	});
+
 
 
 	$('#btnMode0').click(function(){
@@ -141,9 +154,79 @@ $(document).ready(function(){
 
 		$('#trackControlsMode1').show();
 
-		wavesurfer.on('mark', function(){document.getElementById('audioTick').play();});
-
 		initMarkersMode1();
+
+		$('#tempo').on('change drag input', function(){
+
+			var tempo = $(this).val();
+
+			$('#tempoNum').val(tempo);
+
+			updateMarkersMode1(50);
+
+		});
+
+		$('#tempo').mouseup( function(){
+
+			var tempo = $(this).val();
+
+			$('#tempoNum').val(tempo);
+
+			updateMarkersMode1();
+
+		});
+
+		$('#tempoNum').val($('#tempo').val());
+
+		$('#offset').on('change drag input', function(){
+
+			var offset = $(this).val();
+
+			$('#offsetNum').val(offset);
+
+			updateMarkersMode1(50);
+
+		});
+
+		$('#offset').mouseup(function(){
+
+			var offset = $(this).val();
+
+			$('#offsetNum').val(offset);
+
+			updateMarkersMode1();
+
+		});
+
+		$('#offsetNum').val($('#offset').val());
+
+		$('#tempoNum').on('change drag input blur', function(){
+
+			var tempo = $(this).val();
+
+			if(!isNaN(tempo)){
+
+				$('#tempo').val(tempo);
+
+				updateMarkersMode1();
+
+			}
+
+		});
+
+		$('#offsetNum').on('change drag input blur', function(){
+
+			var offset = $(this).val();
+
+			if(!isNaN(offset)){
+
+				$('#offset').val(offset);
+
+				updateMarkersMode1();
+
+			}
+
+		});
 
 		wavesurfer.on('region-click',function(region){
 
@@ -169,82 +252,12 @@ $(document).ready(function(){
 
 	});
 
-	$('#tempo').on('change drag input', function(){
 
-		var tempo = $(this).val();
-
-		$('#tempoNum').val(tempo);
-
-		updateMarkersMode1(50);
-
-	});
-
-	$('#tempo').mouseup( function(){
-
-		var tempo = $(this).val();
-
-		$('#tempoNum').val(tempo);
-
-		updateMarkersMode1();
-
-	});
-
-	$('#tempoNum').val($('#tempo').val());
-
-	$('#offset').on('change drag input', function(){
-
-		var offset = $(this).val();
-
-		$('#offsetNum').val(offset);
-
-		updateMarkersMode1(50);
-
-	});
-
-	$('#offset').mouseup(function(){
-
-		var offset = $(this).val();
-
-		$('#offsetNum').val(offset);
-
-		updateMarkersMode1();
-
-	});
-
-	$('#offsetNum').val($('#offset').val());
-
-	$('#tempoNum').on('change drag input blur', function(){
-
-		var tempo = $(this).val();
-
-		if(!isNaN(tempo)){
-
-			$('#tempo').val(tempo);
-
-			updateMarkersMode1();
-
-		}
-
-	});
-
-	$('#offsetNum').on('change drag input blur', function(){
-
-		var offset = $(this).val();
-
-		if(!isNaN(offset)){
-
-			$('#offset').val(offset);
-
-			updateMarkersMode1();
-
-		}
-
-	});
 
 });
 
 
-
+/*** UPLOAD BY DRAG AND DROP ***/
 function dragOver(e){
 
 	e.preventDefault();
@@ -300,8 +313,12 @@ function doDrop(e){
 	wavesurfer.loadBlob(dt.files[0]);
 
 }
+/********I********/
 
 
+/**
+ * When audio player is ready
+ */
 function initDropSurfer(){
 
 	$('#trackVisualisation').show();
@@ -352,27 +369,29 @@ function initDropSurfer(){
 
 		};
 
-
-		var lastRegionTicked;
-
 		function playTick(region) {
-			lastRegionTicked = region.id;
 
 			debugMe('ticked for region : ' + region.id + ' ' + region.start + ' ' + region.firedIn);
 			if (enableSoundFx) {
 				audioTick.play();
+			} else {
+				alert('Error : ' + error);
 			}
 
 		};
 
-
-		var doError = function () {
+		var doError = function (error) {
 
 			progressDiv.hide();
 
 			$('#trackVisualisation').hide();
 
-			alert('Wrong type of file !');
+			if (error.contains('decoding audio')) {
+				alert('Your browser cannot decode this audio file ! ' +
+					'\nYup, this happens sometimes... ' +
+					'\nTry with another one. Chrome is good at this !');
+			}
+
 
 		};
 
@@ -495,7 +514,10 @@ function initDropSurfer(){
 
 }
 
-
+/**
+ * Add beats
+ * @type {boolean}
+ */
 var setAndReady = false;
 function doSelect(){
 
@@ -511,7 +533,7 @@ function doSelect(){
 
 	$('#selectMode').show();
 
-
+	debugMe('Getting ready ! ');
 
 	if(!setAndReady){
 
@@ -526,7 +548,7 @@ function doSelect(){
 
 				var fCurrTime = wavesurfer.getCurrentTime();
 
-				if (!keyHeldDown) {
+				if (!keyHeldDown && enableSoundFx) {
 					keyHeldDown = true;
 					audioTick.play();
 				}
@@ -534,9 +556,7 @@ function doSelect(){
 				addOneBeat(fCurrTime);
 
 			}else{
-
 				$('#btnStop0').trigger('click');
-
 			}
 
 			return false;
@@ -560,6 +580,9 @@ function doSelect(){
 
 }
 
+/**
+ * Keep focus
+ */
 function doStart(){
 
 	$('#beatInput').on('blur', function(event){
@@ -570,6 +593,9 @@ function doStart(){
 
 }
 
+/**
+ * Enable export
+ */
 function doFinish(){
 
 	$('#btnStop0').prop('disabled', true);
@@ -581,7 +607,9 @@ function doFinish(){
 	debugMe("Stopped. Now " + getBeatsCount() + " beats ")
 
 }
-
+/**
+ * Create beats with tempo-based mode
+ */
 function initMarkersMode1(max){
 
 	var duration = wavesurfer.getDuration();
@@ -610,6 +638,9 @@ function initMarkersMode1(max){
 
 }
 
+/**
+ * Update beats with tempo based mode
+ */
 function updateMarkersMode1(max){
 
 	deleteAllBeats();
