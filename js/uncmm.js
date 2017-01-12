@@ -20,6 +20,7 @@ var audioTick = WaveSurfer.create({
 audioTick.load('sfx/tick.wav');
 audioTick.setVolume(0.4);
 
+var dropTheBeats = document.getElementById('inputBeatFile');
 
 /*******UTILS*******/
 
@@ -249,6 +250,37 @@ $(document).ready(function(){
 			updateMarkersMode1();
 		})
 
+
+	});
+
+	$('#btnMode2').click(function(){
+
+		dropTheBeats.addEventListener('change', function() {
+			var beatInFile = this.files[0];
+			debugMe('found file' + beatInFile.name);
+
+			var beatFileReader = new FileReader();
+			beatFileReader.addEventListener('load', function() {
+
+				var beatTimesInArray = beatFileReader.result.split('\n');
+				debugMe('found ' + beatTimesInArray.length + ' beats');
+				debugMe(JSON.stringify(beatTimesInArray));
+
+				for(var i = 0; i< beatTimesInArray.length ; i++) {
+					var beatTime = beatTimesInArray[i];
+					debugMe('Processing ' + beatTime + ' == ' + parseFloat(beatTime));
+					addOneBeat(parseFloat(beatTime));
+				}
+
+				$('#btnMode0').click();
+				$('#btnExport0').prop('disabled', false);
+			});
+			beatFileReader.readAsText(beatInFile, 'UTF-8');
+		})
+
+		$('#selectMode').hide();
+
+		dropTheBeats.click();
 
 	});
 
