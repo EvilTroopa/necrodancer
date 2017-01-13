@@ -272,13 +272,12 @@ $(document).ready(function(){
 					addOneBeat(parseFloat(beatTime));
 				}
 
+				$('#selectMode').hide();
 				$('#btnMode0').click();
 				$('#btnExport0').prop('disabled', false);
 			});
 			beatFileReader.readAsText(beatInFile, 'UTF-8');
 		})
-
-		$('#selectMode').hide();
 
 		dropTheBeats.click();
 
@@ -418,7 +417,7 @@ function initDropSurfer(){
 
 			$('#trackVisualisation').hide();
 
-			if (error.contains('decoding audio')) {
+			if (error.toString().indexOf('decoding audio') > -1) {
 				alert('Your browser cannot decode this audio file ! ' +
 					'\nYup, this happens sometimes... ' +
 					'\nTry with another one. Chrome is good at this !');
